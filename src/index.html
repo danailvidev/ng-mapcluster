@@ -8,8 +8,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+<style>
+    .loader {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+      width: 100%;
+      align-items: center;
+    }
+  
+  </style>
 <body>
-  <npo-root></npo-root>
+  
+  <npo-root>
+      <div class="loader">
+          <p>Зареждане...</p>
+      </div>
+  </npo-root>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
   <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmJdC65q0FQKCoLV1FI90BR45CGwV4zv0">
