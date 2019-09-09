@@ -1,3 +1,6 @@
 node_modules
 .firebase
 dist
+
+src/environments/environment.prod.ts
+src/environments/environment.ts

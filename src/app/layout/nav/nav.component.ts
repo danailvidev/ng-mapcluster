@@ -6,6 +6,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent implements OnInit {
+  isCollapsed = true;
   @Input() menuItems: any;
 
   @Output() logout: EventEmitter<any> = new EventEmitter();

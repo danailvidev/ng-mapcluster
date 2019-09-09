@@ -17,16 +17,6 @@ import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyBGfbFGm-4kKEk-rfjdmY8qMMZqZT25HWE',
-  authDomain: 'ng-mapcluster.firebaseapp.com',
-  databaseURL: 'https://ng-mapcluster.firebaseio.com',
-  projectId: 'ng-mapcluster',
-  storageBucket: 'ng-mapcluster.appspot.com',
-  messagingSenderId: '30322919836',
-  appId: '1:30322919836:web:4a9e0b9ed1bd3f606a2059'
-};
-
 @NgModule({
   declarations: [
     AppComponent
@@ -35,7 +25,7 @@ const firebaseConfig = {
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     HttpClientModule,
