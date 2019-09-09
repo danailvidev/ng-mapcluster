@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 
-import * as firebase from 'firebase/app';
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
 import * as MarkerClusterer from '@google/markerclusterer';
 import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
@@ -120,7 +121,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   createMarkers(user: any) {
-    const iconBase = 'http://maps.google.com/mapfiles/ms/icons/';
+    const iconBase = 'https://maps.google.com/mapfiles/ms/icons/';
 
     const latitude = parseFloat(user.location.latitude);
     const longitude = parseFloat(user.location.longitude);
