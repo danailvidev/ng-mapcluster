@@ -56,19 +56,20 @@
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
-    <nz-form-item nz-row>
-        <nz-form-control [nzSpan]="14" [nzOffset]="6">
-                <button type="button" nz-button (click)="googleLogin()" style="text-transform:none">
-                    <div style="float: left;">
-                        <img width="20px" alt="Google &quot;G&quot; Logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
-                    </div>
-                    Регистрирай се с Google
-                </button>
-        </nz-form-control>
-      </nz-form-item>
-    <nz-form-item nz-row>
+    <nz-form-item nz-row style="text-align: center">
       <nz-form-control [nzSpan]="14" [nzOffset]="6">
         <button nz-button nzType="primary">Регистрирай се</button>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row style="text-align: center">
+      <nz-form-control [nzSpan]="14" [nzOffset]="6">
+            <div>Или</div>
+              <button type="button" nz-button (click)="googleLogin()" style="text-transform:none">
+                  <div style="float: left;">
+                      <img width="20px" alt="Google &quot;G&quot; Logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                  </div>
+                  Регистрирай се с Google
+              </button>
       </nz-form-control>
     </nz-form-item>
   </form>

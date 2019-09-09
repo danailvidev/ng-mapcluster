@@ -127,6 +127,9 @@ export class MapComponent implements AfterViewInit {
   }
 
   createMarkers(user: any) {
+    if (!user.location || !user.location.latitude || !user.location.longitude) {
+      return;
+    }
     const iconBase = 'https://maps.google.com/mapfiles/ms/icons/';
 
     const latitude = parseFloat(user.location.latitude);
