@@ -1,0 +1,26 @@
+<nz-layout class="layout">
+    <nz-sider
+      nzCollapsible
+      [(nzCollapsed)]="isCollapsed"
+      [nzBreakpoint]="'xxl'"
+      [nzCollapsedWidth]="0"
+      [nzZeroTrigger]="zeroTrigger"
+    >
+    <npo-nav
+        [menuItems]="menuItems"
+        (logout)="logout()"
+    ></npo-nav>
+    </nz-sider>
+    <nz-layout>
+      <!-- <nz-header></nz-header> -->
+      <nz-content>
+        <div class="inner-content">
+          <npo-map></npo-map>
+        </div>
+      </nz-content>
+      <!-- <nz-footer><npo-footer></npo-footer></nz-footer> -->
+    </nz-layout>
+  </nz-layout>
+  <ng-template #zeroTrigger>
+    <i nz-icon nzType="menu-fold" nzTheme="outline"></i>
+  </ng-template>
