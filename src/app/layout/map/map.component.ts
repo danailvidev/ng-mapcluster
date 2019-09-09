@@ -14,6 +14,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class MapComponent implements AfterViewInit {
   map: google.maps.Map;
+  markers: Array<any> = [];
+  markerCluster: MarkerClusterer;
   @ViewChild('map', { static: false }) mapElement: ElementRef;
 
   constructor(private authSvc: AuthService, private firestore: AngularFirestore) { }
@@ -23,17 +25,17 @@ export class MapComponent implements AfterViewInit {
   }
 
   initMap() {
+    const center = new google.maps.LatLng(42.678551, 25.386633); // Buglaria
+
+    const mapOptions: google.maps.MapOptions = {
+      center,
+      zoom: 8,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
     navigator.geolocation.getCurrentPosition((browserLocation) => {
-      const center = new google.maps.LatLng(42.678551, 25.386633); // Buglaria
-
-      const mapOptions: google.maps.MapOptions = {
-        center,
-        zoom: 8,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-
       this.authSvc.user$.pipe(take(1)).subscribe(user => {
         const userRef = this.firestore.collection('users').doc(user.uid);
 
@@ -88,12 +90,16 @@ export class MapComponent implements AfterViewInit {
     const query = firebase.firestore().collection('users');
 
     query.onSnapshot((querySnapshot) => {
-      let markers = [];
+      for (let mark of this.markers) {
+        mark.setMap(null);
+      }
+      this.markers = [];
+      if (this.markerCluster) this.markerCluster.clearMarkers();
       querySnapshot.forEach(x => {
-        markers.push(this.createMarkers(x.data()));
+        this.markers.push(this.createMarkers(x.data()));
       });
       const clusterOptions = { imagePath: 'assets/' };
-      const markerCluster = new MarkerClusterer(this.map, markers, clusterOptions);
+      const markerCluster = new MarkerClusterer(this.map, this.markers, clusterOptions);
     }, (error) => {
       console.log(error);
     });
