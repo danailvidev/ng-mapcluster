@@ -15,6 +15,10 @@ export class LayoutComponent implements OnInit {
       label: 'Нова локация'
     },
     {
+      iconType: 'setting',
+      label: 'Настройки'
+    },
+    {
       iconType: 'logout',
       label: 'Изход',
       callBack: 'logout'

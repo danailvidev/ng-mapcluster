@@ -15,14 +15,10 @@ export class NavComponent implements OnInit {
   ngOnInit() {
   }
 
-  onLogout() {
-    this.logout.emit(true);
-  }
-
   callBack(callBack: any) {
     switch (callBack) {
       case 'logout': {
-        this.onLogout();
+        this.logout.emit(true);
       }
     }
   }
