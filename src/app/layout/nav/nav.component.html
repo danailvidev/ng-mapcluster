@@ -1,0 +1,8 @@
+<ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+    <ng-template ngFor let-item [ngForOf]="menuItems">
+        <li nz-menu-item (click)="callBack(item.callBack)">
+            <i nz-icon nzType="{{item.iconType}}"></i>
+            <span>{{item.label}}</span>
+        </li>
+    </ng-template>
+</ul>
