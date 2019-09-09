@@ -7,6 +7,12 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
+        <nz-form-label [nzSm]="9" [nzXs]="24" nzRequired nzFor="email">Имена</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input nz-input formControlName="name" id="name" />
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item>
       <nz-form-label [nzSm]="9" [nzXs]="24" nzFor="password" nzRequired>Парола</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Моля въведи парола!">
         <input

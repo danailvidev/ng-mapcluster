@@ -11,7 +11,8 @@ import * as firebase from 'firebase/app';
 export interface User {
     uid: string;
     email: string;
-    phone: string;
+    phone?: string;
+    name?: string;
 }
 
 @Injectable({
@@ -57,10 +58,13 @@ export class AuthService {
     }
 
     emailRegister(form: any) {
-        const { email, password, phone, phoneNumberPrefix } = form;
+        const { email, password, phone, phoneNumberPrefix, name } = form;
         return this.afAuth.auth.createUserWithEmailAndPassword(email, password).then((credential: any) => {
+            credential.user.name = name;
             credential.user.phone = `${phoneNumberPrefix} ${phone}`;
-            this.updateUserData(credential.user);
+            this.updateUserData(credential.user).then( () => {
+                this.router.navigate(['/map']);
+            });
         });
     }
 
@@ -70,6 +74,7 @@ export class AuthService {
         const data: User = {
             uid: user.uid,
             email: user.email,
+            name: user.name || '',
             phone: user.phone || ''
         };
         return userRef.set(data, { merge: true });
