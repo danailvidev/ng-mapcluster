@@ -1,45 +1,37 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 
 import * as firebase from 'firebase/app';
-import * as MarkerClusterer from "@google/markerclusterer"
+import * as MarkerClusterer from '@google/markerclusterer';
 import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
-
-declare var google: any;
-let map: any;
-let marker: any;
-const options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0
-};
-let infowindow: any;
-const iconBase = 'http://maps.google.com/mapfiles/ms/icons/';
 
 @Component({
   selector: 'npo-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements AfterViewInit {
+  map: google.maps.Map;
   @ViewChild('map', { static: false }) mapElement: ElementRef;
 
   constructor(private authSvc: AuthService, private firestore: AngularFirestore) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.initMap();
   }
 
   initMap() {
     navigator.geolocation.getCurrentPosition((browserLocation) => {
-      var center = new google.maps.LatLng(42.678551, 25.386633);
+      const center = new google.maps.LatLng(42.678551, 25.386633); // Buglaria
 
-      map = new google.maps.Map(this.mapElement.nativeElement, {
+      const mapOptions: google.maps.MapOptions = {
         center,
         zoom: 8,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-      });
+      };
+
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
       this.authSvc.user$.pipe(take(1)).subscribe(user => {
         const userRef = this.firestore.collection('users').doc(user.uid);
@@ -88,7 +80,7 @@ export class MapComponent implements OnInit {
       // });
     }, (error) => {
       console.log(error);
-    }, options);
+    });
   }
 
   getAllUsersLocation() {
@@ -99,8 +91,8 @@ export class MapComponent implements OnInit {
       querySnapshot.forEach(x => {
         markers.push(this.createMarkers(x.data()));
       });
-      const clusterOptions = {imagePath: 'assets/'};
-      const markerCluster = new MarkerClusterer(map, markers, clusterOptions);
+      const clusterOptions = { imagePath: 'assets/' };
+      const markerCluster = new MarkerClusterer(this.map, markers, clusterOptions);
     }, (error) => {
       console.log(error);
     });
@@ -128,6 +120,8 @@ export class MapComponent implements OnInit {
   }
 
   createMarkers(user: any) {
+    const iconBase = 'http://maps.google.com/mapfiles/ms/icons/';
+
     const latitude = parseFloat(user.location.latitude);
     const longitude = parseFloat(user.location.longitude);
 
@@ -147,11 +141,11 @@ export class MapComponent implements OnInit {
     });
 
     userMarker.addListener('click', () => {
-      infoMarkerwindow.open(map, userMarker);
+      infoMarkerwindow.open(this.map, userMarker);
     });
 
     userMarker.addListener('dblclick', () => {
-      infoMarkerwindow.open(map, userMarker);
+      infoMarkerwindow.open(this.map, userMarker);
     });
 
     return userMarker;
