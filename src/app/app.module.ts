@@ -8,6 +8,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBGfbFGm-4kKEk-rfjdmY8qMMZqZT25HWE',
@@ -28,7 +29,9 @@ const firebaseConfig = {
     BrowserAnimationsModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    HttpClientModule,
+    HttpClientJsonpModule
   ],
   providers: [AngularFirestore],
   bootstrap: [AppComponent]
