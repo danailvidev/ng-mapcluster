@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import * as firebase from 'firebase/app';
+import * as MarkerClusterer from "@google/markerclusterer"
 import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -32,9 +33,12 @@ export class MapComponent implements OnInit {
 
   initMap() {
     navigator.geolocation.getCurrentPosition((browserLocation) => {
+      var center = new google.maps.LatLng(42.678551, 25.386633);
+
       map = new google.maps.Map(this.mapElement.nativeElement, {
-        center: { lat: browserLocation.coords.latitude, lng: browserLocation.coords.longitude },
-        zoom: 15
+        center,
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
       });
 
       this.authSvc.user$.pipe(take(1)).subscribe(user => {
@@ -91,9 +95,12 @@ export class MapComponent implements OnInit {
     const query = firebase.firestore().collection('users');
 
     query.onSnapshot((querySnapshot) => {
+      let markers = [];
       querySnapshot.forEach(x => {
-        this.createMarkers(x.data());
+        markers.push(this.createMarkers(x.data()));
       });
+      const clusterOptions = {imagePath: 'assets/'};
+      const markerCluster = new MarkerClusterer(map, markers, clusterOptions);
     }, (error) => {
       console.log(error);
     });
@@ -123,14 +130,14 @@ export class MapComponent implements OnInit {
   createMarkers(user: any) {
     const latitude = parseFloat(user.location.latitude);
     const longitude = parseFloat(user.location.longitude);
+
     const userMarker = new google.maps.Marker({
-      map,
       position: { lat: latitude, lng: longitude },
       icon: iconBase + 'green-dot.png',
       title: user.email
     });
 
-    infowindow = new google.maps.InfoWindow({
+    let infoMarkerwindow = new google.maps.InfoWindow({
       content: `
       <h3>Име: ${user.name}</h3>
       <strong>Имейл: </strong>${user.email}
@@ -140,14 +147,14 @@ export class MapComponent implements OnInit {
     });
 
     userMarker.addListener('click', () => {
-      infowindow.open(map, userMarker);
+      infoMarkerwindow.open(map, userMarker);
     });
 
     userMarker.addListener('dblclick', () => {
-      infowindow.open(map, userMarker);
+      infoMarkerwindow.open(map, userMarker);
     });
 
-
+    return userMarker;
 
     // google.maps.event.addListener(donorMarker, 'click', function () {
     //   infowindow.setContent('<h3>' + place.name + '</h3><p>Phone number: ' + place.phone + '<br>Email: ' + place.email + '</p>');
