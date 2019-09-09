@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
@@ -18,7 +19,7 @@ export class MapComponent implements AfterViewInit {
   markerCluster: MarkerClusterer;
   @ViewChild('map', { static: false }) mapElement: ElementRef;
 
-  constructor(private authSvc: AuthService, private firestore: AngularFirestore) { }
+  constructor(private authSvc: AuthService, private firestore: AngularFirestore, public router: Router) { }
 
   ngAfterViewInit() {
     this.initMap();
@@ -35,56 +36,46 @@ export class MapComponent implements AfterViewInit {
 
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
-    navigator.geolocation.getCurrentPosition((browserLocation) => {
-      this.authSvc.user$.pipe(take(1)).subscribe(user => {
-        const userRef = this.firestore.collection('users').doc(user.uid);
+    this.authSvc.user$.pipe(take(1)).subscribe(user => {
+      if (!user) {
+        this.router.navigate(['/auth/login']);
+        return;
+      }
 
-        userRef.get().toPromise().then((doc) => {
-          if (doc.exists) {
-            let location = doc.data().location;
-            if (!location) {
+      const userRef = this.firestore.collection('users').doc(user.uid);
+
+      userRef.get().toPromise().then((doc) => {
+        if (doc.exists) {
+          const location = doc.data().location;
+          if (!location) {
+            navigator.geolocation.getCurrentPosition((browserLocation) => {
               userRef.set({
                 location: new firebase.firestore.GeoPoint(browserLocation.coords.latitude, browserLocation.coords.longitude)
               }, { merge: true }).then(() => {
                 this.getAllUsersLocation();
               });
-            } else {
-              // already has location TODO: update ?
-              this.getAllUsersLocation();
-            }
+            }, (error) => {
+              console.log(error);
+            });
           } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
+            // already has location TODO: update ?
+            this.getAllUsersLocation();
           }
-        });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
       });
-
-
-      // infowindow = new google.maps.InfoWindow();
-
-      // marker = new google.maps.Marker({
-      //   position: { lat: location.coords.latitude, lng: location.coords.longitude },
-      //   map,
-      //   title: 'Click to zoom',
-      //   icon: iconBase + 'blue-dot.png'
-      // });
-
-      // map.addListener('center_changed', () => {
-      //   window.setTimeout(() => {
-      //     map.panTo(marker.getPosition());
-      //   }, 3000);
-      // });
-
-      // marker.addListener('click', (event: any) => {
-      //   infowindow.setPosition(event.latLng);
-      //   infowindow.setContent('<h2>Yes, I wanna be a donor!</h2>' +
-      //     '<h3><a href="/add-donor/' + marker.getPosition().lat() + '/' + marker.getPosition().lng() + '">Register Here</a></h3>');
-      //   infowindow.open(map, marker);
-      // });
-    }, (error) => {
-      console.log(error);
     });
   }
+
+  // marker.addListener('click', (event: any) => {
+  //   infowindow.setPosition(event.latLng);
+  //   infowindow.setContent('<h2>Yes, I wanna be a donor!</h2>' +
+  //     '<h3><a href="/add-donor/' + marker.getPosition().lat() + '/' + marker.getPosition().lng() + '">Register Here</a></h3>');
+  //   infowindow.open(map, marker);
+  // });
+
 
   getAllUsersLocation() {
     const query = firebase.firestore().collection('users');

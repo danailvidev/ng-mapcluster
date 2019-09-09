@@ -1,5 +1,5 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -25,7 +25,8 @@ export class AuthService {
     constructor(
         private afs: AngularFirestore,
         public afAuth: AngularFireAuth,
-        public router: Router) {
+        public router: Router,
+        private ngZone: NgZone) {
         this.user$ = this.afAuth.authState.pipe(
             switchMap((user: firebase.User) => {
                 if (user) {
@@ -38,10 +39,7 @@ export class AuthService {
 
     async login(form: any) {
         const { email, password } = form;
-        const result = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-        if (result) {
-            this.router.navigate(['/map']);
-        }
+        return await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     }
 
     async sendPasswordResetEmail(passwordResetEmail: string) {
@@ -82,7 +80,7 @@ export class AuthService {
 
     signOut() {
         this.afAuth.auth.signOut().then( () => {
-            this.router.navigate(['/auth/login']);
+            this.ngZone.run(() => this.router.navigate([ '/auth/login' ])).then();
         });
     }
 }
