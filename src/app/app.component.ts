@@ -1,23 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'npo-root',
   template: `
-  <button *ngIf="newVersion" nz-button [nzType]="'primary'" (click)="reload()">Нова версия</button>
+  <ng-template #template let-notification>
+      <div class="ant-notification-notice-content">
+        <div>
+          <div class="ant-notification-notice-message">Налична нова версия</div>
+          <div class="ant-notification-notice-description">
+            Новата версия ще бъде изтеглена автоматично. Моля изчакайте.
+          </div>
+        </div>
+      </div>
+    </ng-template>
   <router-outlet></router-outlet>
-  `
+  `,
+  styles: [``]
 })
 export class AppComponent implements OnInit {
   newVersion: any = false;
+  @ViewChild('template', { static: true }) templateRef: TemplateRef<any>;
 
-  constructor(public swUpdate: SwUpdate, private message: NzMessageService) { }
+  constructor(public swUpdate: SwUpdate, private notification: NzNotificationService) { }
 
   ngOnInit() {
     this.swUpdate.available
-      .subscribe(update => this.newVersion = true);
+      .subscribe(update => {
+        this.notification.template(this.templateRef, {
+          nzDuration: 3000,
+        });
+        setTimeout( () => {
+          this.reload();
+        }, 3000);
+      });
   }
 
   reload() {
