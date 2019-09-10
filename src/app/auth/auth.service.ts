@@ -59,8 +59,8 @@ export class AuthService {
         const { email, password, phone, phoneNumberPrefix, name } = form;
         return this.afAuth.auth.createUserWithEmailAndPassword(email, password).then((credential: any) => {
             credential.user.name = name;
-            credential.user.phone = `${phoneNumberPrefix} ${phone}`;
-            this.updateUserData(credential.user).then( () => {
+            credential.user.phone = phone ? `${phoneNumberPrefix} ${phone}` : '';
+            this.updateUserData(credential.user).then(() => {
                 this.router.navigate(['/map']);
             });
         });
@@ -79,8 +79,8 @@ export class AuthService {
     }
 
     signOut() {
-        this.afAuth.auth.signOut().then( () => {
-            this.ngZone.run(() => this.router.navigate([ '/auth/login' ])).then();
+        this.afAuth.auth.signOut().then(() => {
+            this.ngZone.run(() => this.router.navigate(['/auth/login'])).then();
         });
     }
 }
