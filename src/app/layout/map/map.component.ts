@@ -1,10 +1,11 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 import * as MarkerClusterer from '@google/markerclusterer';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService, User } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -13,13 +14,38 @@ import { AngularFirestore } from '@angular/fire/firestore';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnChanges {
   map: google.maps.Map;
   markers: Array<any> = [];
   markerCluster: MarkerClusterer;
+  user: User;
   @ViewChild('map', { static: false }) mapElement: ElementRef;
 
-  constructor(private authSvc: AuthService, private firestore: AngularFirestore, public router: Router) { }
+  @Input() newLocation = false;
+
+  constructor(
+    private authSvc: AuthService, 
+    private firestore: AngularFirestore, 
+    public router: Router,
+    private message: NzMessageService) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+
+    if (changes.newLocation && changes.newLocation.currentValue) {
+      if (this.user) {
+        const userRef = this.firestore.collection('users').doc(this.user.uid);
+        navigator.geolocation.getCurrentPosition((browserLocation) => {
+          userRef.set({
+            location: new firebase.firestore.GeoPoint(browserLocation.coords.latitude, browserLocation.coords.longitude)
+          }, { merge: true }).then(() => {
+            this.message.create('success', `Локацията беше успешно актуализирана`);
+            this.getAllUsersLocation();
+          });
+        });
+      }
+    }
+
+  }
 
   ngAfterViewInit() {
     this.initMap();
@@ -37,6 +63,7 @@ export class MapComponent implements AfterViewInit {
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
     this.authSvc.user$.pipe(take(1)).subscribe(user => {
+      this.user = user;
       if (!user) {
         this.router.navigate(['/auth/login']);
         return;
@@ -142,6 +169,9 @@ export class MapComponent implements AfterViewInit {
     }
     if (user.phone) {
       infoContent += `<div><strong>Телефон: </strong>${user.phone}</div>`;
+    }
+    if (user.info) {
+      infoContent += `<div><strong>Инфо: </strong>${user.info}</div>`;
     }
 
     const infoMarkerwindow = new google.maps.InfoWindow({
