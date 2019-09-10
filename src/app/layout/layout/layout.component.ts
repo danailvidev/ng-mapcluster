@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class LayoutComponent implements OnInit {
   isCollapsed = true;
+  showSettings = false;
   menuItems: any = [
     {
       iconType: 'environment',
@@ -16,7 +17,8 @@ export class LayoutComponent implements OnInit {
     },
     {
       iconType: 'setting',
-      label: 'Настройки'
+      label: 'Настройки',
+      callBack: 'settings'
     },
     {
       iconType: 'logout',
@@ -32,5 +34,13 @@ export class LayoutComponent implements OnInit {
 
   logout() {
     this.authSvc.signOut();
+  }
+
+  onShowSettings() {
+    this.showSettings = true;
+  }
+
+  onHideSettings() {
+    this.showSettings = !this.showSettings;
   }
 }

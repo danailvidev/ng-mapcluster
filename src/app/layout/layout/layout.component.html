@@ -9,11 +9,19 @@
     <npo-nav
         [menuItems]="menuItems"
         (logout)="logout()"
+        (showSettings)="onShowSettings()"
     ></npo-nav>
+
     </nz-sider>
     <nz-layout>
       <!-- <nz-header></nz-header> -->
       <nz-content>
+
+        <npo-settings
+          [visible]="showSettings"
+          (hideSettings)="onHideSettings()"
+        ></npo-settings>
+
         <div class="inner-content">
           <npo-map></npo-map>
         </div>
