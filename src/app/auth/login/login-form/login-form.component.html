@@ -1,0 +1,36 @@
+<div class="wrapper">
+  <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Моля въведи имейл!">
+          <nz-input-group>
+            <input type="text" nz-input formControlName="email" placeholder="имейл" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Моля въведи парола!">
+          <nz-input-group>
+            <input type="password" nz-input formControlName="password" placeholder="Парола" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <a [routerLink]="['/auth/forgot-password']" routerLinkActive="router-link-active"  class="login-form-forgot" class="login-form-forgot">Забравена парола</a>
+          <button nz-button class="login-form-button" [nzType]="'primary'">Влез</button>
+          Или
+          <a [routerLink]="['/auth/register']" routerLinkActive="router-link-active" >Регистрация</a>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nz-row>
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button type="button" nz-button (click)="onGoogleLogin()" style="text-transform:none">
+                    <div style="float: left;">
+                        <img width="20px" alt="Google &quot;G&quot; Logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                    </div>
+                    Влез с Google
+                </button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+</div>
