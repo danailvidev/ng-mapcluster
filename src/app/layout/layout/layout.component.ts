@@ -10,10 +10,12 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class LayoutComponent implements OnInit {
   isCollapsed = true;
   showSettings = false;
+  getNewLocation = false;
   menuItems: any = [
     {
       iconType: 'environment',
-      label: 'Нова локация'
+      label: 'Нова локация',
+      callBack: 'newLocation'
     },
     {
       iconType: 'setting',
@@ -42,5 +44,9 @@ export class LayoutComponent implements OnInit {
 
   onHideSettings() {
     this.showSettings = !this.showSettings;
+  }
+
+  onNewLocation() {
+    this.getNewLocation = true;
   }
 }

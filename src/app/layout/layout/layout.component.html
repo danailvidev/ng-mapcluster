@@ -10,6 +10,7 @@
         [menuItems]="menuItems"
         (logout)="logout()"
         (showSettings)="onShowSettings()"
+        (newLocation)="onNewLocation()"
     ></npo-nav>
 
     </nz-sider>
@@ -23,7 +24,7 @@
         ></npo-settings>
 
         <div class="inner-content">
-          <npo-map></npo-map>
+          <npo-map [newLocation]="getNewLocation"></npo-map>
         </div>
       </nz-content>
       <!-- <nz-footer><npo-footer></npo-footer></nz-footer> -->
