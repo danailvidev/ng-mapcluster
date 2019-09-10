@@ -1,0 +1,45 @@
+<div class="wrapper">
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+        <nz-form-item>
+            <nz-form-label nzFor="email">Имейл</nz-form-label>
+            <nz-form-control>
+                <input nz-input disabled [(ngModel)]="userEmail" [ngModelOptions]="{standalone: true}" id="email" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="email">Имена</nz-form-label>
+            <nz-form-control>
+                <input nz-input formControlName="name" id="name" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="email">Телефон</nz-form-label>
+            <nz-form-control>
+                <input nz-input formControlName="phone" id="phone" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="email">Локация</nz-form-label>
+            <nz-form-control>
+                <input nz-input disabled [(ngModel)]="userLocation" [ngModelOptions]="{standalone: true}" id="location" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="info">Инфо</nz-form-label>
+            <nz-form-control>
+                <textarea
+                    nz-input
+                    formControlName="info" 
+                    id="info"
+                    placeholder="Информация за мен"
+                    [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+                ></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row style="text-align: center">
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary">Съхрани</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>
