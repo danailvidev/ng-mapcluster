@@ -1,0 +1,76 @@
+<div class="wrapper">
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <nz-form-label [nzSm]="9" [nzXs]="24" nzRequired nzFor="email">Имейл</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Невалиден имейл формат!">
+        <input nz-input formControlName="email" id="email" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="9" [nzXs]="24" nzRequired nzFor="email">Имена</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input nz-input formControlName="name" id="name" />
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="9" [nzXs]="24" nzFor="password" nzRequired>Парола</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Моля въведи парола!">
+        <input
+          nz-input
+          type="password"
+          id="password"
+          formControlName="password"
+          (ngModelChange)="updateConfirmValidator()"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="9" [nzXs]="24" nzFor="checkPassword" nzRequired>Повтори парола</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
+        <input nz-input type="password" formControlName="checkPassword" id="checkPassword" />
+        <ng-template #errorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            Моля потвърди паролата!
+          </ng-container>
+          <ng-container *ngIf="control.hasError('confirm')">
+            Потвърдената парола не съответства!
+          </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="9" [nzXs]="24" nzFor="phone">Телефон</nz-form-label>
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        [nzValidateStatus]="validateForm.controls['phone']"
+        nzErrorTip="Моля въведи телефон!"
+      >
+        <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
+          <ng-template #addOnBeforeTemplate>
+            <nz-select formControlName="phoneNumberPrefix" class="phone-select">
+              <nz-option nzLabel="+359" nzValue="+359"></nz-option>
+            </nz-select>
+          </ng-template>
+          <input formControlName="phone" id="'phone'" nz-input />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row style="text-align: center">
+      <nz-form-control [nzSpan]="14" [nzOffset]="6">
+        <button nz-button nzType="primary">Регистрирай се</button>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row style="text-align: center">
+      <nz-form-control [nzSpan]="14" [nzOffset]="6">
+            <div>Или</div>
+              <button type="button" nz-button (click)="onGoogleLogin()" style="text-transform:none">
+                  <div style="float: left;">
+                      <img width="20px" alt="Google &quot;G&quot; Logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                  </div>
+                  Регистрирай се с Google
+              </button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>

@@ -4,11 +4,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  [nz-form] {
-    max-width: 800px;
-  }
-
-  .phone-select {
-    width: 70px;
-  }
+  flex-direction: column;
 }
