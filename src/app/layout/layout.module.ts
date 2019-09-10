@@ -1,21 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NgZorroAntdModule } from 'ng-zorro-antd';
-import { IconModule } from '@ant-design/icons-angular';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 import { LayoutComponents, LayoutRouting } from './layout.routing';
 import { NavComponent } from './nav/nav.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
-  declarations: [LayoutComponents.components, NavComponent],
+  declarations: [LayoutComponents.components, NavComponent, SettingsComponent],
   imports: [
-    NgZorroAntdModule,
+    NzLayoutModule,
+    NzMenuModule,
     CommonModule,
     LayoutRouting,
-    IconModule,
-    NzIconModule
+    NzIconModule,
+    NzDrawerModule
   ],
   providers: [
   ]

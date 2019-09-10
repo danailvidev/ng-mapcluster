@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
