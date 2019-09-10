@@ -24,8 +24,8 @@ export class MapComponent implements AfterViewInit, OnChanges {
   @Input() newLocation = false;
 
   constructor(
-    private authSvc: AuthService, 
-    private firestore: AngularFirestore, 
+    private authSvc: AuthService,
+    private firestore: AngularFirestore,
     public router: Router,
     private message: NzMessageService) { }
 
@@ -85,12 +85,10 @@ export class MapComponent implements AfterViewInit, OnChanges {
               console.log(error);
             });
           } else {
-            // already has location TODO: update ?
             this.getAllUsersLocation();
           }
         } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
+          console.log('No such document!');
         }
       });
     });
@@ -112,12 +110,14 @@ export class MapComponent implements AfterViewInit, OnChanges {
         mark.setMap(null);
       }
       this.markers = [];
-      if (this.markerCluster) this.markerCluster.clearMarkers();
+      if (this.markerCluster) {
+        this.markerCluster.clearMarkers();
+      }
       querySnapshot.forEach(x => {
         this.markers.push(this.createMarkers(x.data()));
       });
       const clusterOptions = { imagePath: 'assets/' };
-      const markerCluster = new MarkerClusterer(this.map, this.markers, clusterOptions);
+      this.markerCluster = new MarkerClusterer(this.map, this.markers, clusterOptions);
     }, (error) => {
       console.log(error);
     });
