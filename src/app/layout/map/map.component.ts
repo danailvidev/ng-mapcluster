@@ -132,13 +132,24 @@ export class MapComponent implements AfterViewInit {
       title: user.email
     });
 
-    let infoMarkerwindow = new google.maps.InfoWindow({
-      content: `
-      <h3>Име: ${user.name}</h3>
-      <strong>Имейл: </strong>${user.email}
-      <br>
-      <strong>Телефон: </strong>${user.phone}
-      `
+    let infoContent = '';
+
+    if (user.name) {
+      infoContent += `<h3>Име: ${user.name}</h3>`;
+    }
+    if (user.email) {
+      infoContent += `<div><strong>Имейл: </strong>${user.email}</div>`;
+    }
+    if (user.phone) {
+      infoContent += `<div><strong>Телефон: </strong>${user.phone}</div>`;
+    }
+
+    const infoMarkerwindow = new google.maps.InfoWindow({
+      content: infoContent
+    });
+
+    google.maps.event.addListener(this.map, 'click', () => {
+      infoMarkerwindow.close();
     });
 
     userMarker.addListener('click', () => {
