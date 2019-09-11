@@ -23,7 +23,9 @@ export class SettingsFormComponent implements OnInit {
     ngOnInit() {
         this.authSvc.user$.pipe(take(1)).subscribe((res: User) => {
             this.userEmail = res.email;
-            this.userLocation = [res.location.latitude, res.location.longitude];
+            if (res.location) {
+                this.userLocation = [res.location.latitude, res.location.longitude];
+            }
 
             this.validateForm.patchValue({
                 name: res.name,

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 
@@ -15,6 +15,7 @@ export interface User {
     name?: string;
     location?: any;
     info?: string;
+    photoUrl?: string;
 }
 
 @Injectable({
@@ -48,15 +49,13 @@ export class AuthService {
         return await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
     }
 
-    googleLogin(updateUser = false) {
+    googleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
         return this.afAuth.auth.signInWithPopup(provider)
             .then((credential) => {
-                if (updateUser) {
-                    this.updateUserData(credential.user);
-                }
-                this.router.navigate(['/map']);
-            });
+                this.updateUserData(credential.user);
+            })
+            .catch((err) => console.log(err));
     }
 
     emailRegister(form: any) {
@@ -64,22 +63,30 @@ export class AuthService {
         return this.afAuth.auth.createUserWithEmailAndPassword(email, password).then((credential: any) => {
             credential.user.name = name;
             credential.user.phone = phone ? `${phoneNumberPrefix} ${phone}` : '';
-            this.updateUserData(credential.user).then(() => {
-                this.router.navigate(['/map']);
-            });
+            this.updateUserData(credential.user);
         });
     }
 
     private updateUserData(user) {
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-        const data: User = {
-            uid: user.uid,
-            email: user.email,
-            name: user.name || user.displayName || '',
-            phone: user.phone || ''
-        };
-        return userRef.set(data, { merge: true });
+
+        userRef.get().toPromise()
+            .then((docSnapshot) => {
+                if (docSnapshot.exists) {
+                    console.log('user already exist');
+                } else {
+                    const data: User = {
+                        uid: user.uid,
+                        email: user.email,
+                        name: user.name || user.displayName || '',
+                        phone: user.phone || '',
+                        photoUrl: user.photoURL || ''
+                    };
+                    userRef.set(data, { merge: true });
+                }
+                this.ngZone.run(() => this.router.navigate(['/map'])).then();
+            });
     }
 
     signOut() {

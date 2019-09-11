@@ -106,8 +106,10 @@ export class MapComponent implements AfterViewInit, OnChanges {
     const query = firebase.firestore().collection('users');
 
     query.onSnapshot((querySnapshot) => {
-      for (let mark of this.markers) {
-        mark.setMap(null);
+      if (this.markers && this.markers.length) {
+        for (let mark of this.markers) {
+          mark.setMap(null);
+        }
       }
       this.markers = [];
       if (this.markerCluster) {
@@ -155,27 +157,35 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
     const userMarker = new google.maps.Marker({
       position: { lat: latitude, lng: longitude },
-      icon: iconBase + 'green-dot.png',
+      icon: user.admin ? iconBase + 'red-dot.png' : iconBase + 'green-dot.png',
       title: user.email
     });
 
     let infoContent = '';
 
     if (user.name) {
-      infoContent += `<h3>Име: ${user.name}</h3>`;
+      infoContent += `<span style="font-size:15px;font-weight:500;">${user.name}</span>`;
+    }
+    if (user.photoUrl) {
+      infoContent += `<image src="${user.photoUrl}" height="20"></image>`;
     }
     if (user.email) {
-      infoContent += `<div><strong>Имейл: </strong>${user.email}</div>`;
+      infoContent += `<div><strong>${user.email}</strong></div>`;
     }
     if (user.phone) {
-      infoContent += `<div><strong>Телефон: </strong>${user.phone}</div>`;
+      infoContent += `<div>&#9742; <strong>${user.phone}</strong></div>`;
     }
     if (user.info) {
-      infoContent += `<div><strong>Инфо: </strong>${user.info}</div>`;
+      infoContent += `<div>Инфо: <strong>${user.info}</strong></div>`;
     }
 
+    const infoWrapper = `<div style="display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;">${infoContent}</div>`;
+
     const infoMarkerwindow = new google.maps.InfoWindow({
-      content: infoContent
+      content: infoWrapper
     });
 
     google.maps.event.addListener(this.map, 'click', () => {

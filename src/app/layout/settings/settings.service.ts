@@ -10,9 +10,9 @@ export class SettingsService {
     constructor(private afs: AngularFirestore) { }
 
     public updateUser(user: User) {
-        const userRed = this.afs.collection('users').doc(user.uid);
+        const userRef = this.afs.collection('users').doc(user.uid);
 
-        return userRed.update({
+        return userRef.update({
             name: user.name,
             phone: user.phone,
             info: user.info,
