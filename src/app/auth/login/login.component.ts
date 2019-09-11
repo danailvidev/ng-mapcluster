@@ -34,6 +34,6 @@ export class LoginComponent implements OnInit {
   }
 
   onGoogleLogin() {
-    this.authSvc.googleLogin();
+    this.authSvc.googleLogin(false);
   }
 }

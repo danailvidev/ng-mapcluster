@@ -29,6 +29,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onGoogleLogin() {
-    this.authSvc.googleLogin();
+    this.authSvc.googleLogin(true);
   }
 }

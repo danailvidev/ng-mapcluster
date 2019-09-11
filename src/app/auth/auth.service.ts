@@ -48,11 +48,13 @@ export class AuthService {
         return await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
     }
 
-    googleLogin() {
+    googleLogin(updateUser = false) {
         const provider = new firebase.auth.GoogleAuthProvider();
         return this.afAuth.auth.signInWithPopup(provider)
             .then((credential) => {
-                this.updateUserData(credential.user);
+                if (updateUser) {
+                    this.updateUserData(credential.user);
+                }
                 this.router.navigate(['/map']);
             });
     }
