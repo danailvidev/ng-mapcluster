@@ -36,7 +36,8 @@ export class MapComponent implements AfterViewInit, OnChanges {
         const userRef = this.firestore.collection('users').doc(this.user.uid);
         navigator.geolocation.getCurrentPosition((browserLocation) => {
           userRef.set({
-            location: new firebase.firestore.GeoPoint(browserLocation.coords.latitude, browserLocation.coords.longitude)
+            location: new firebase.firestore.GeoPoint(browserLocation.coords.latitude, browserLocation.coords.longitude),
+            lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
           }, { merge: true }).then(() => {
             this.message.create('success', `Локацията беше успешно актуализирана`);
             this.getAllUsersLocation();
@@ -77,7 +78,8 @@ export class MapComponent implements AfterViewInit, OnChanges {
           if (!location) {
             navigator.geolocation.getCurrentPosition((browserLocation) => {
               userRef.set({
-                location: new firebase.firestore.GeoPoint(browserLocation.coords.latitude, browserLocation.coords.longitude)
+                location: new firebase.firestore.GeoPoint(browserLocation.coords.latitude, browserLocation.coords.longitude),
+                lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
               }, { merge: true }).then(() => {
                 this.getAllUsersLocation();
               });
