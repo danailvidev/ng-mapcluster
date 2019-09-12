@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { SettingsFormComponent } from './settings-form.component';
+import { FormUploadComponent } from './file-upload.component';
+import { UploadFileService } from './file-upload.service';
 
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -22,7 +24,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
         NzSelectModule
     ],
     exports: [SettingsFormComponent],
-    declarations: [SettingsFormComponent],
-    providers: [],
+    declarations: [SettingsFormComponent, FormUploadComponent],
+    providers: [UploadFileService],
 })
 export class SettingsFormModule { }
