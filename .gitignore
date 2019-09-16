@@ -4,3 +4,5 @@ dist
 
 src/environments/environment.prod.ts
 src/environments/environment.ts
+
+src/index.prod.html
